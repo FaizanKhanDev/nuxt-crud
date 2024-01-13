@@ -1,83 +1,106 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+  <div>
+    <v-col cols="12" md="6">
+      <v-text-field v-model="newStudent.firstName" outlined label="First name"></v-text-field>
     </v-col>
-  </v-row>
+    <v-col cols="12" md="6">
+      <v-text-field v-model="newStudent.lastName" outlined label="Last name"></v-text-field>
+
+    </v-col>
+    <v-col cols="6" v-if="!isEdit">
+      <v-btn color="primary" block @click="submit"> Submit</v-btn>
+    </v-col>
+    <v-col cols="6" v-else>
+      <v-btn color="primary" block @click="saveEdit"> Edit</v-btn>
+    </v-col>
+
+
+    <ul>
+      <h1>Students List</h1>
+      <li v-for="(student, i) in studentList" :key="i">
+
+        {{ i + 1 }} {{ student.firstName }}
+        {{ student.lastName }}
+        <v-btn icon color="blue" @click="edit(student)">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+
+        <v-btn icon color="red" @click="remove(student)">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
-}
+  data() {
+    return {
+      newStudent: {
+        firstName: "",
+        lastName: ""
+      },
+      studentList: [
+        {
+          id: 1,
+          firstName: "John",
+          lastName: "Doe",
+
+        },
+        {
+          id: 2,
+          firstName: "Jane",
+          lastName: "Doe",
+        },
+        {
+          id: 3,
+          firstName: "Jack",
+          lastName: "Doe",
+        }
+      ],
+      isEdit: false
+    };
+  },
+  methods: {
+    submit() {
+      console.log("submitted", this.newStudent);
+      this.studentList.push(this.newStudent)
+      this.newStudent = {
+        firstName: "",
+        lastName: ""
+      }
+    },
+    edit(student) {
+      console.log("student", JSON.stringify(student));
+      this.newStudent = student;
+      this.isEdit = true
+    },
+    saveEdit() {
+      this.isEdit = false;
+      let index = this.studentList.findIndex((student) => student.id == this.newStudent.id)
+      console.log("index", JSON.stringify(index));
+      if (index != -1) {
+        this.studentList[index] = this.newStudent;
+        this.newStudent = {
+          firstName: "",
+          lastName: ""
+        }
+        this.isEdit = false
+
+      }
+
+
+    },
+
+    remove(value){
+      console.log("remove", JSON.stringify(value));
+      this.studentList = this.studentList.filter((student) => student.id != value.id)
+    }
+
+  }
+};
 </script>
+
+<style></style>
