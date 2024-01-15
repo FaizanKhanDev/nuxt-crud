@@ -35,36 +35,42 @@
 </template>
 
 <script>
+import { mapState,mapActions,mapGetters,mapMutations } from "vuex";
+import { mapFields } from 'vuex-map-fields';
 export default {
   data() {
     return {
-      newStudent: {
-        firstName: "",
-        lastName: ""
-      },
-      studentList: [
-        {
-          id: 1,
-          firstName: "John",
-          lastName: "Doe",
-
-        },
-        {
-          id: 2,
-          firstName: "Jane",
-          lastName: "Doe",
-        },
-        {
-          id: 3,
-          firstName: "Jack",
-          lastName: "Doe",
-        }
-      ],
       isEdit: false
     };
   },
+  computed:{
+      ...mapState("student",["newStudent","studentList"]),
+      ...mapFields("student", [
+        "newStudent",
+        "newStudent.firstName",
+        "newStudent.lastName",
+      ])
+
+
+  },
+
   methods: {
     submit() {
+
+      fetch("http://localhost:5000/student", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+
+        },
+      }).then((res) => {
+        return res.json()
+      }).then((data) => {
+        console.log("data", JSON.stringify(data));
+      }).catch((err) => {
+        console.log("err", JSON.stringify(err));
+      })
+      return;
       console.log("submitted", this.newStudent);
       this.studentList.push(this.newStudent)
       this.newStudent = {
