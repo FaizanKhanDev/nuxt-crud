@@ -42,9 +42,25 @@ const state = () => ({
   ],
 });
 const actions = {
+  async createNewStudent({ state, commit, dispatch, getters }, params) {
+    commit('setNewStudent', state.newStudent)
+  },
+  async editStudent({ state, commit, dispatch, getters }, params) {
+
+  },
+  async deleteStudent({ state, commit, dispatch, getters }, params) {
+
+  },
+  async updateStudent({ state, commit, dispatch, getters }, params) {
+
+  }
+}
+const mutations = {
+  setNewStudent(state, value) {
+    state.studentList.push(value)
+  }
 
 }
-const mutations = {}
 
 
 const getters = {
